@@ -46,7 +46,7 @@ if (isset($_GET['id'])) {
         if ($plant && $plant['name'] !== 'Planta não encontrada') {
             echo '<div class="bg-white dark:bg-gray-800 p-6 mx-auto overflow-y-auto max-w-full sm:max-w-md">';
             echo '<div class="flex justify-center">';
-            echo '<img src="/'.htmlspecialchars($plant["image_path"]).'" alt="'.htmlspecialchars($plant["name"]).'" class="aspect-w-10 aspect-h-8 rounded-lg overflow-hidden">';
+            echo '<img src="/'.htmlspecialchars($plant["image_path"]).'" alt="'.htmlspecialchars($plant["name"]).'" class="block w-full aspect-w-10 aspect-h-8 rounded-lg overflow-hidden">';
             echo '</div>';
             echo '<h1 class="text-2xl font-bold mt-2 text-center text-gray-900 dark:text-gray-100">'.htmlspecialchars($plant["name"]).'</h1>';
             echo '<p class="text-lg font-bold text-center text-gray-700 dark:text-gray-300 mt-1"><i>'.htmlspecialchars($plant["scientific_name"]).'</i></p>';
