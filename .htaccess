@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# Esconder a extensão .php
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php [NC,L]
+
+# Rewrite rule for plant details
+RewriteRule ^plant/([^/]+)/([0-9]+)/?$ pages/plant.php?id=$2 [L,QSA]
