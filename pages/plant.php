@@ -44,7 +44,7 @@ if (isset($_GET['id'])) {
     <div class="container mx-auto p-4">
         <?php
         if ($plant && $plant['name'] !== 'Planta não encontrada') {
-            echo '<div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">';
+            echo '<div class="bg-white dark:bg-gray-800 p-6 mx-auto overflow-y-auto max-w-full sm:max-w-md">';
             echo '<div class="flex justify-center">';
             echo '<img src="/'.htmlspecialchars($plant["image_path"]).'" alt="'.htmlspecialchars($plant["name"]).'" class="aspect-w-10 aspect-h-8 rounded-lg overflow-hidden">';
             echo '</div>';
