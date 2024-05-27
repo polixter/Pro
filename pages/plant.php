@@ -56,6 +56,7 @@ if (isset($_GET['id'])) {
             echo '<h2 class="text-xl font-semibold mt-4 text-gray-900 dark:text-gray-100">Cuidados</h2>';
             echo '<p class="mt-1 text-gray-700 dark:text-gray-300">'.nl2br(htmlspecialchars($plant["care_instructions"])).'</p>';
             echo '<h2 class="text-xl font-semibold mt-4 text-gray-900 dark:text-gray-100">Ficha Técnica</h2>';
+            echo '<p class="mt-1 text-gray-700 dark:text-gray-300">'.nl2br(htmlspecialchars($plant["technical_sheet"])).'</p>';
             echo '<ul class="mt-1 text-gray-700 dark:text-gray-300">';
             echo '<li><strong>Toxicidade:</strong> '.($plant["toxicity"] ? "Sim" : "Não").'</li>';
             echo '<li><strong>Requisitos de Sol:</strong> '.htmlspecialchars($plant["sun_requirements"]).'</li>';
