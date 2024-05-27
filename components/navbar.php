@@ -22,7 +22,6 @@ include $_SERVER['DOCUMENT_ROOT'].'/utils/db.php';
                 <path id="Layer" class="s1"
                     d="m21.5 11.3c0 0.1-0.3 0.5-0.7 1-1.1 1.6-2.2 3.3-2.9 4.6-1.4 2.8-2.2 5.9-2.1 8.4v0.7l1.1 0.1c1.6 0 1.5 0.1 1.5-1.2 0-2.7 0.5-5.3 2.4-10.9 0.5-1.5 0.9-2.7 0.9-2.7q0 0-0.1 0-0.1 0-0.1 0z" />
             </svg>
-            <span class="self-center text-lg font-semibold whitespace-nowrap dark:text-white">Pro-Jardim Plantas</span>
         </a>
         <div class="flex md:order-2">
             <!-- Dark mode switcher -->
