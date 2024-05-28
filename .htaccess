@@ -10,3 +10,9 @@ RewriteRule ^plant/([^/]+)/([0-9]+)/?$ pages/plant.php?id=$2 [L,QSA]
 
 # Redireciona www.meusite.com/manage_plants para www.meusite.com/pages/manage_plants
 RewriteRule ^manage$ /pages/manage [L]
+
+# Redireciona www.meusite.com/manage_plants para www.meusite.com/pages/manage_plants
+RewriteRule ^login$ /pages/login [L]
+
+# Redireciona www.meusite.com/manage_plants para www.meusite.com/pages/manage_plants
+RewriteRule ^register$ /pages/register [L]
