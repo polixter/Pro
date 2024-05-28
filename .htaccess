@@ -7,3 +7,9 @@ RewriteRule ^(.*)$ $1.php [NC,L]
 
 # Rewrite rule for plant details
 RewriteRule ^plant/([^/]+)/([0-9]+)/?$ pages/plant.php?id=$2 [L,QSA]
+
+# Redireciona www.meusite.com/manage_plants para www.meusite.com/pages/manage_plants
+RewriteRule ^manage_plants$ /pages/manage_plants [L]
+
+# Redireciona todas as outras requisições da pasta pages para o formato simplificado
+RewriteRule ^([^/]+)$ /pages/$1 [L]
