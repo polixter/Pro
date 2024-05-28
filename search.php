@@ -44,13 +44,13 @@ if ($result->num_rows > 0) {
         echo '<a href="'.$plant_url.'" class="text-blue-500 dark:text-blue-300 mt-4 inline-block">Ver mais</a>';
         // Adicionar o botão de edição apenas para administradores
         if ($is_admin) {
-            echo '<a href="/manage_plants.php?id='.$row["id"].'" class="text-yellow-500 dark:text-yellow-300 mt-4 inline-block ml-2">Editar</a>';
+            echo '<a href="/manage?id='.$row["id"].'" class="text-yellow-500 dark:text-yellow-300 mt-4 inline-block ml-2">Editar</a>';
         }
 
         echo '</div>';
     }
 } else {
-    echo "Nenhuma planta com essas características foi encontrada 😕";
+    echo "Não encontramos nenhuma planta com essas características 😕";
 }
 
 

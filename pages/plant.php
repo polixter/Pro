@@ -39,7 +39,7 @@ if (isset($_GET['id'])) {
     <link href="/style.css" rel="stylesheet" />
 </head>
 
-<body class="bg-gray-100 dark:bg-gray-900 dark:text-white">
+<body class="bg-gray-200 dark:bg-gray-900 dark:text-white">
     <?php include $_SERVER['DOCUMENT_ROOT'].'/components/navbar.php'; ?>
     <div class="container mx-auto p-4">
         <?php
