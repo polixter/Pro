@@ -49,7 +49,7 @@ if (isset($_GET['id'])) {
             echo '<img src="/'.htmlspecialchars($plant["image_path"]).'" alt="'.htmlspecialchars($plant["name"]).'" class="block w-full aspect-square object-cover rounded-lg overflow-hidden">';
             echo '</div>';
             echo '<h1 class="text-2xl font-bold mt-2 text-center text-gray-900 dark:text-gray-100">'.htmlspecialchars($plant["name"]).'</h1>';
-            echo '<p class="text-g font-bold text-center text-gray-700 dark:text-gray-300 mt-1"><i>'.htmlspecialchars($plant["scientific_name"]).'</i></p>';
+            echo '<p class="text-g text-center text-gray-700 dark:text-gray-300 mt-1"><i>'.htmlspecialchars($plant["scientific_name"]).'</i></p>';
             echo '<h2 class="text-xl font-semibold mt-4 text-gray-900 dark:text-gray-100">Sobre</h2>';
             echo '<p class="mt-2 text-gray-700 dark:text-gray-300">'.nl2br(htmlspecialchars($plant["description"])).'</p>';
             echo '<h2 class="text-xl font-semibold mt-4 text-gray-900 dark:text-gray-100">Plantio</h2>';
