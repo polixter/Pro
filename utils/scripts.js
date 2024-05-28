@@ -19,12 +19,12 @@ if (
 function searchPlants() {
   var search = document.getElementById("search").value;
   var sunRequirement = document.getElementById("sun-requirements").value;
-  var type = document.getElementById("type").value;
+  var category = document.getElementById("category").value;
   var toxicity = document.getElementById("toxicity").value;
 
-  if (search.length >= 2 || sunRequirement || type || toxicity) {
+  if (search.length >= 2 || sunRequirement || category || toxicity) {
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "/search.php?search=" + search + "&sun_requirements=" + sunRequirement + "&type=" + type +
+    xhr.open("GET", "../search.php?search=" + search + "&sun_requirements=" + sunRequirement + "&category=" + category +
       "&toxicity=" + toxicity, true);
     xhr.onreadystatechange = function () {
       if (xhr.readyState == 4 && xhr.status == 200) {
@@ -44,7 +44,7 @@ function searchPlants() {
 
 function loadAllPlants() {
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", "/search.php?search=&sun_requirements=&type=&toxicity=", true);
+  xhr.open("GET", "../search.php?search=&sun_requirements=&category=&toxicity=", true);
   xhr.onreadystatechange = function () {
     if (xhr.readyState == 4 && xhr.status == 200) {
       var resultsElement = document.getElementById("results");

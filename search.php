@@ -3,22 +3,26 @@ include $_SERVER['DOCUMENT_ROOT'].'/utils/db.php';
 
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 $sun_requirements = isset($_GET['sun_requirements']) ? $_GET['sun_requirements'] : '';
-$type = isset($_GET['type']) ? $_GET['type'] : '';
+$category = isset($_GET['category']) ? $_GET['category'] : '';
 $toxicity = isset($_GET['toxicity']) ? $_GET['toxicity'] : '';
 
-$sql = "SELECT id, name, scientific_name, image_path FROM plants WHERE 1=1";
+$sql = "SELECT DISTINCT p.id, p.name, p.scientific_name, p.image_path 
+        FROM plants p
+        LEFT JOIN plant_categories pc ON p.id = pc.plant_id
+        LEFT JOIN categories c ON pc.category_id = c.id
+        WHERE 1=1";
 
 if (strlen($search) >= 2) {
-    $sql .= " AND (name LIKE '%$search%' OR scientific_name LIKE '%$search%')";
+    $sql .= " AND (p.name LIKE '%$search%' OR p.scientific_name LIKE '%$search%')";
 }
 if ($sun_requirements) {
-    $sql .= " AND sun_requirements='$sun_requirements'";
+    $sql .= " AND p.sun_requirements='$sun_requirements'";
 }
-if ($type) {
-    $sql .= " AND type='$type'";
+if ($category) {
+    $sql .= " AND c.name='$category'";
 }
 if ($toxicity !== '') {
-    $sql .= " AND toxicity=$toxicity";
+    $sql .= " AND p.toxicity=$toxicity";
 }
 
 $result = $conn->query($sql);

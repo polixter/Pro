@@ -30,20 +30,23 @@ session_start();
                 <option value="Part shade">Sombra-parcial</option>
                 <option value="Full shade">Sombra</option>
             </select>
-            <select id="type" onchange="searchPlants()"
+            <select id="category" onchange="searchPlants()"
                 class="hidden md:block p-2 border border-primary rounded dark:bg-gray-700 dark:border-gray-600">
-                <option value="">Tipo</option>
-                <option value="Perennials">Perenes</option>
-                <option value="Annuals">Anuais</option>
-                <option value="Herbs">Ervas</option>
-                <option value="Succulents">Suculentas</option>
-                <option value="Shrubs">Arbustos</option>
-                <option value="Trees">Arvores</option>
-                <option value="Groundcovers">Forrações</option>
-                <option value="Vines">Trepadeira</option>
-                <option value="Bulbs">Bulbos</option>
-                <option value="Ferns">Samambaias</option>
+                <option value="">Categoria</option>
+                <option value="Anuais">Anuais</option>
+                <option value="Perenes">Perenes</option>
+                <option value="Ervas">Ervas</option>
+                <option value="Suculentas">Suculentas</option>
+                <option value="Folhagens">Folhagens</option>
+                <option value="Arbustos">Arbustos</option>
+                <option value="Árvores">Árvores</option>
+                <option value="Palmeiras">Palmeiras</option>
+                <option value="Frutíferas">Frutíferas</option>
+                <option value="Trepadeiras">Trepadeiras</option>
+                <option value="Forrações">Forrações</option>
+                <option value="Aquáticas">Aquáticas</option>
             </select>
+
             <select id="toxicity" onchange="searchPlants()"
                 class="hidden md:block p-2 border border-primary rounded dark:bg-gray-700 dark:border-gray-600">
                 <option value="">Toxicidade</option>
