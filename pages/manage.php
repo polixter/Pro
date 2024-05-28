@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id']) || !$_SESSION['is_admin']) {
-    header("Location: ../pages/login.php");
+    header("Location: /login");
     exit();
 }
 
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($conn->query($sql) === TRUE) {
-        header("Location: manage.php");
+        header("Location: /manage");
         exit();
     } else {
         $error = "Error: " . $conn->error;
@@ -204,8 +204,8 @@ if (isset($_GET['id'])) {
                         echo '<td class="border px-4 py-2 text-gray-700 dark:text-gray-300">'.$row["name"].'</td>';
                         echo '<td class="border px-4 py-2 text-gray-700 dark:text-gray-300">'.$row["scientific_name"].'</td>';
                         echo '<td class="border px-4 py-2 text-gray-700 dark:text-gray-300">';
-                        echo '<a href="manage?id='.$row["id"].'" class="text-blue-500 dark:text-blue-300">Editar</a> | ';
-                        echo '<a href="delete_plant?id='.$row["id"].'" class="text-red-500 dark:text-red-300">Excluir</a>';
+                        echo '<a href="/manage?id='.$row["id"].'" class="text-blue-500 dark:text-blue-300">Editar</a> | ';
+                        echo '<a href="/delete_plant?id='.$row["id"].'" class="text-red-500 dark:text-red-300">Excluir</a>';
                         echo '</td>';
                         echo '</tr>';
                     }
