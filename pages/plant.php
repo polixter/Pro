@@ -1,6 +1,7 @@
 <?php
 session_start();
 include $_SERVER['DOCUMENT_ROOT'].'/utils/db.php';
+define('BASE_URL', 'http://' . $_SERVER['HTTP_HOST'] . '/');
 
 // Obter ID da planta da URL amigável
 if (isset($_GET['id'])) {
@@ -74,7 +75,7 @@ if (isset($_GET['id'])) {
         $conn->close();
         ?>
     </div>
-    <script src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/utils/scripts.js"></script>
+    <script src="<?php echo BASE_URL; ?>utils/scripts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/flowbite.min.js"></script>
 </body>
 
