@@ -59,6 +59,7 @@ session_start();
         </div>
     </div>
     <script src="./utils/scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/flowbite.min.js"></script>
 </body>
 
 </html>

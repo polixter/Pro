@@ -39,12 +39,12 @@ if (isset($_GET['id'])) {
     <link href="/style.css" rel="stylesheet" />
 </head>
 
-<body class="bg-gray-100 dark:bg-gray-900 dark:text-white">
+<body class="bg-gray-200 dark:bg-gray-900 dark:text-white">
     <?php include $_SERVER['DOCUMENT_ROOT'].'/components/navbar.php'; ?>
     <div class="container mx-auto p-4">
         <?php
         if ($plant && $plant['name'] !== 'Planta não encontrada') {
-            echo '<div class="bg-gray-100 dark:bg-gray-900 p-4 mx-auto overflow-y-auto max-w-full sm:max-w-md rounded-lg">';
+            echo '<div class="bg-gray-200 dark:bg-gray-900 p-4 mx-auto overflow-y-auto max-w-full sm:max-w-md rounded-lg">';
             echo '<div class="flex justify-center">';
             echo '<img src="/'.htmlspecialchars($plant["image_path"]).'" alt="'.htmlspecialchars($plant["name"]).'" class="block w-full aspect-square object-cover rounded-lg overflow-hidden">';
             echo '</div>';
@@ -57,7 +57,7 @@ if (isset($_GET['id'])) {
             echo '<h2 class="border-t border-gray-300 dark:border-gray-500 text-xl font-bold mt-4 text-lime-700 dark:text-gray-100">Cuidados</h2>';
             echo '<p class="mt-1 text-gray-900 dark:text-gray-300 font-semibold">'.nl2br(htmlspecialchars($plant["care_instructions"])).'</p>';
             echo '<h2 class="border-t border-gray-300 dark:border-gray-500 text-xl font-bold mt-4 text-lime-700 dark:text-gray-100">Ficha Técnica</h2>';
-            echo '<p class="mt-1 text-gray-9 00 dark:text-gray-300 leading-relaxed">'.nl2br(htmlspecialchars($plant["technical_sheet"])).'</p>';
+            echo '<p class="mt-1 text-gray-9 00 dark:text-gray-300 font-semibold leading-relaxed">'.nl2br(htmlspecialchars($plant["technical_sheet"])).'</p>';
             echo '<ul class="mt-1 text-gray-900 dark:text-gray-300 font-semibold">';
             echo '<li><strong>Toxicidade:</strong> '.($plant["toxicity"] ? "Sim" : "Não").'</li>';
             echo '<li><strong>Requisitos de Sol:</strong> '.htmlspecialchars($plant["sun_requirements"]).'</li>';
