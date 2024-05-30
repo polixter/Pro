@@ -43,7 +43,7 @@ include $_SERVER['DOCUMENT_ROOT'].'/utils/db.php';
             <button data-collapse-toggle="mobile-menu-4" type="button"
                 class="md:hidden text-gray-500 hover:bg-gray-100focus:outline-none focus:ring-2 focus:ring-gray-200 rounded-lg text-sm p-2 inline-flex items-center dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                 aria-controls="mobile-menu-4" aria-expanded="false">
-                <span class="sr-only">Abir menu</span>
+                <span class="sr-only">Abrir menu</span>
                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd"
                         d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
@@ -72,6 +72,13 @@ include $_SERVER['DOCUMENT_ROOT'].'/utils/db.php';
                     <a href="/manage"
                         class="text-gray-700 hover:bg-gray-50 border-b border-gray-100 md:hover:bg-transparent md:border-0 block pl-3 pr-4 py-2 md:hover:text-green-500 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Gerenciar
                         Plantas</a>
+                </li>
+                <?php } ?>
+                <?php
+                if (isset($_SESSION) && $_SESSION) { ?>
+                <li>
+                    <a href="../utils/logout.php"
+                        class="text-red-500 hover:bg-gray-50 border-b border-gray-100 md:hover:bg-transparent md:border-0 block pl-3 pr-4 py-2 md:hover:text-green-500 md:p-0 md:dark:hover:text-white dark:text-red-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Logout</a>
                 </li>
                 <?php } ?>
             </ul>
