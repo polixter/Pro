@@ -36,7 +36,7 @@ if (isset($_GET['id'])) {
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.1/tailwind.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/flowbite.min.css" rel="stylesheet" />
-    <link href="/style.css" rel="stylesheet" />
+    <link href="../style.css" rel="stylesheet" />
 </head>
 
 <body class="bg-gray-200 dark:bg-gray-900 dark:text-white">
@@ -46,7 +46,7 @@ if (isset($_GET['id'])) {
         if ($plant && $plant['name'] !== 'Planta não encontrada') {
             echo '<div class="bg-gray-200 dark:bg-gray-900 p-4 mx-auto overflow-y-auto max-w-full sm:max-w-md rounded-lg">';
             echo '<div class="flex justify-center">';
-            echo '<img src="/'.htmlspecialchars($plant["image_path"]).'" alt="'.htmlspecialchars($plant["name"]).'" class="block w-full aspect-square object-cover rounded-lg overflow-hidden">';
+            echo '<img src="/'.htmlspecialchars($plant["image_path"]).'" alt="'.htmlspecialchars($plant["name"]).'" class="block w-full aspect-[4/3] object-cover rounded-lg overflow-hidden">';
             echo '</div>';
             echo '<h1 class="text-2xl font-bold mt-2 text-center text-gray-900 dark:text-gray-100">'.htmlspecialchars($plant["name"]).'</h1>';
             echo '<p class="text-g text-center text-gray-900 dark:text-gray-300 mt-1"><i>'.htmlspecialchars($plant["scientific_name"]).'</i></p>';

@@ -1,7 +1,14 @@
 // Tailwind CSS Configuration
 tailwind.config = {
   content: ["/**/*.html", "/**/*.php"],
-  darkMode: "class"
+  darkMode: "class",
+  theme: {
+    extend: {
+      aspectRatio: {
+        '4/3': '4 / 3',
+      },
+    },
+  },
 };
 
 // Dark Mode Toggle Script
