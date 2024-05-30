@@ -38,7 +38,7 @@ if ($result->num_rows > 0) {
         $plant_url = "/plant/" . $plant_name . "/" . $plant_id;
 
         echo '<div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">';
-        echo '<a href="'.$plant_url.'" class="flex">';
+        echo '<a href="'.$plant_url.'" class="block">';
         echo '<img src="'.$row["image_path"].'" alt="'.$row["name"].'" class="w-full h-48 object-cover rounded-lg">';
         echo '</a>';
         echo '<h2 class="text-lg font-bold mt-2 text-gray-900 dark:text-gray-100">'.$row["name"].'</h2>';
@@ -54,7 +54,6 @@ if ($result->num_rows > 0) {
 } else {
     echo "Não encontramos nenhuma planta com essas características 😕";
 }
-
 
 $conn->close();
 ?>
