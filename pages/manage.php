@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($conn->query($sql) === TRUE) {
-        header("Location: /manage");
+        header("Location: /");
         exit();
     } else {
         $error = "Error: " . $conn->error;
