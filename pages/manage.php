@@ -59,6 +59,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // error logic
     }
 }
+
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $sql = "SELECT * FROM plants WHERE id=$id";
+    $result = $conn->query($sql);
+    $plant = $result->fetch_assoc();
+}
 ?>
 
 <!DOCTYPE html>
