@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['is_admin'] = $user['is_admin'];
-            header("Location: ../");
+            header("Location: /");
             exit();
         } else {
             $error = "Senha incorreta";
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php include '../components/navbar.php'; ?>
     <div class="min-h-screen flex items-center justify-center bg-gray-200 dark:bg-gray-900 dark:text-white px-4 sm:px-0">
         <div class="max-w-sm w-full space-y-12">
-            <form method="POST" action="login.php" class="space-y-6">
+            <form method="POST" action="/login" class="space-y-6">
                 <input type="hidden" name="remember" value="true">
                 <div class="rounded-md shadow-sm space-y-3">
                     <div>
