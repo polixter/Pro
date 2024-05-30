@@ -36,7 +36,6 @@ if (isset($_GET['id'])) {
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.1/tailwind.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/flowbite.min.css" rel="stylesheet" />
-    <link href="../style.css" rel="stylesheet" />
 </head>
 
 <body class="bg-gray-200 dark:bg-gray-900 dark:text-white">
@@ -75,7 +74,7 @@ if (isset($_GET['id'])) {
         $conn->close();
         ?>
     </div>
-    <script src="/utils/scripts.js"></script>
+    <script src="../utils/scripts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/flowbite.min.js"></script>
 </body>
 
