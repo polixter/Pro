@@ -74,7 +74,7 @@ if (isset($_GET['id'])) {
         $conn->close();
         ?>
     </div>
-    <script src="<?php echo $_SERVER['DOCUMENT_ROOT'].'/utils/scripts.js'; ?>"></script>
+    <script src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/utils/scripts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/flowbite.min.js"></script>
 </body>
 
