@@ -7,6 +7,22 @@ if (!isset($_SESSION['user_id']) || !$_SESSION['is_admin']) {
 
 include '../utils/db.php';
 
+function compressImage($source, $destination, $quality) {
+    $info = getimagesize($source);
+
+    if ($info['mime'] == 'image/jpeg') 
+        $image = imagecreatefromjpeg($source);
+    elseif ($info['mime'] == 'image/gif') 
+        $image = imagecreatefromgif($source);
+    elseif ($info['mime'] == 'image/png') 
+        $image = imagecreatefrompng($source);
+
+    imagewebp($image, $destination, $quality);
+    imagedestroy($image);
+
+    return $destination;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
     $name = $_POST['name'];
@@ -22,8 +38,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Handle the image upload
     if (isset($_FILES["image_path"]) && $_FILES["image_path"]["error"] == 0) {
         $target_dir = "../uploads/";
-        $target_file = $target_dir . basename($_FILES["image_path"]["name"]);
-        if (move_uploaded_file($_FILES["image_path"]["tmp_name"], $target_file)) {
+        $target_file = $target_dir . pathinfo($_FILES["image_path"]["name"], PATHINFO_FILENAME) . ".webp";
+        $image_temp = $_FILES["image_path"]["tmp_name"];
+
+        // Compress and convert image to WEBP
+        compressImage($image_temp, $target_file, 80);
+
+        if (file_exists($target_file)) {
             $image_path = $target_file;
         } else {
             $image_path = $_POST['existing_image_path']; // use existing image if upload fails
@@ -129,7 +150,7 @@ if (isset($_GET['id'])) {
                         <?php echo (isset($plant['toxicity']) && $plant['toxicity'] == 0) ? 'selected' : ''; ?>>Sem
                         toxicidade</option>
                     <option value="1"
-                        <?php echo (isset($plant['toxicity']) && $plant['toxicity'] == 1) ? 'selected' : ''; ?>>Toxica
+                        <?php echo (isset($plant['toxicity']) && $plant['toxicity'] == 1) ? 'selected' : ''; ?>>Tóxica
                     </option>
                 </select>
             </div>
