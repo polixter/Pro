@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $toxicity = $_POST['toxicity'];
     $sun_requirements = $_POST['sun_requirements'];
     $type = $_POST['type'];
+    $technical_sheet = $_POST['technical_sheet'];
 
     // Handle the image upload
     if (isset($_FILES["image_path"]) && $_FILES["image_path"]["error"] == 0) {
@@ -32,9 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($id) {
-        $sql = "UPDATE plants SET name='$name', scientific_name='$scientific_name', description='$description', planting_instructions='$planting_instructions', care_instructions='$care_instructions', image_path='$image_path', toxicity='$toxicity', sun_requirements='$sun_requirements', type='$type' WHERE id=$id";
+        $sql = "UPDATE plants SET name='$name', scientific_name='$scientific_name', description='$description', planting_instructions='$planting_instructions', care_instructions='$care_instructions', image_path='$image_path', toxicity='$toxicity', sun_requirements='$sun_requirements', type='$type', technical_sheet='$technical_sheet' WHERE id=$id";
     } else {
-        $sql = "INSERT INTO plants (name, scientific_name, description, planting_instructions, care_instructions, image_path, toxicity, sun_requirements, type) VALUES ('$name', '$scientific_name', '$description', '$planting_instructions', '$care_instructions', '$image_path', '$toxicity', '$sun_requirements', '$type')";
+        $sql = "INSERT INTO plants (name, scientific_name, description, planting_instructions, care_instructions, image_path, toxicity, sun_requirements, type, technical_sheet) VALUES ('$name', '$scientific_name', '$description', '$planting_instructions', '$care_instructions', '$image_path', '$toxicity', '$sun_requirements', '$type', '$technical_sheet')";
     }
 
     if ($conn->query($sql) === TRUE) {
@@ -70,11 +71,12 @@ if (isset($_GET['id'])) {
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white">
     <?php include '../components/navbar.php'; ?>
     <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold">Editar Plantas</h1>
+        <h1 class="text-2xl font-bold"><?php echo $id ? 'Editar' : 'Adicionar'; ?> Planta</h1>
         <form method="POST" class="mt-4" enctype="multipart/form-data">
             <input type="hidden" name="id" value="<?php echo isset($plant['id']) ? $plant['id'] : ''; ?>">
             <input type="hidden" name="existing_image_path"
                 value="<?php echo isset($plant['image_path']) ? $plant['image_path'] : ''; ?>">
+
             <div class="mb-4">
                 <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome</label>
                 <input type="text" id="name" name="name"
@@ -83,7 +85,7 @@ if (isset($_GET['id'])) {
             </div>
             <div class="mb-4">
                 <label for="scientific_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome
-                    científico</label>
+                    Científico</label>
                 <input type="text" id="scientific_name" name="scientific_name"
                     value="<?php echo isset($plant['scientific_name']) ? $plant['scientific_name'] : ''; ?>"
                     class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400">
@@ -107,6 +109,12 @@ if (isset($_GET['id'])) {
                     class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400"><?php echo isset($plant['care_instructions']) ? $plant['care_instructions'] : ''; ?></textarea>
             </div>
             <div class="mb-4">
+                <label for="technical_sheet" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ficha
+                    Técnica</label>
+                <textarea id="technical_sheet" name="technical_sheet"
+                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400"><?php echo isset($plant['technical_sheet']) ? $plant['technical_sheet'] : ''; ?></textarea>
+            </div>
+            <div class="mb-4">
                 <label for="image_path"
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imagem</label>
                 <input type="file" id="image_path" name="image_path"
@@ -119,8 +127,7 @@ if (isset($_GET['id'])) {
                     class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400">
                     <option value="0"
                         <?php echo (isset($plant['toxicity']) && $plant['toxicity'] == 0) ? 'selected' : ''; ?>>Sem
-                        toxicidade
-                    </option>
+                        toxicidade</option>
                     <option value="1"
                         <?php echo (isset($plant['toxicity']) && $plant['toxicity'] == 1) ? 'selected' : ''; ?>>Toxica
                     </option>
@@ -145,76 +152,8 @@ if (isset($_GET['id'])) {
                         Sombra</option>
                 </select>
             </div>
-            <div class="mb-4">
-                <label for="type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Type</label>
-                <select id="type" name="type"
-                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400">
-                    <option value="Perennials"
-                        <?php echo (isset($plant['type']) && $plant['type'] == 'Perennials') ? 'selected' : ''; ?>>
-                        Perenes</option>
-                    <option value="Annuals"
-                        <?php echo (isset($plant['type']) && $plant['type'] == 'Annuals') ? 'selected' : ''; ?>>Anual
-                    </option>
-                    <option value="Herbs"
-                        <?php echo (isset($plant['type']) && $plant['type'] == 'Herbs') ? 'selected' : ''; ?>>Ervas
-                    </option>
-                    <option value="Succulents"
-                        <?php echo (isset($plant['type']) && $plant['type'] == 'Succulents') ? 'selected' : ''; ?>>
-                        Suculentas</option>
-                    <option value="Shrubs"
-                        <?php echo (isset($plant['type']) && $plant['type'] == 'Shrubs') ? 'selected' : ''; ?>>Arbustos
-                    </option>
-                    <option value="Trees"
-                        <?php echo (isset($plant['type']) && $plant['type'] == 'Trees') ? 'selected' : ''; ?>>Arvores
-                    </option>
-                    <option value="Groundcovers"
-                        <?php echo (isset($plant['type']) && $plant['type'] == 'Groundcovers') ? 'selected' : ''; ?>>
-                        Forrações</option>
-                    <option value="Vines"
-                        <?php echo (isset($plant['type']) && $plant['type'] == 'Vines') ? 'selected' : ''; ?>>Trepadeiras
-                    </option>
-                    <option value="Bulbs"
-                        <?php echo (isset($plant['type']) && $plant['type'] == 'Bulbs') ? 'selected' : ''; ?>>Bulbos
-                    </option>
-                    <option value="Ferns"
-                        <?php echo (isset($plant['type']) && $plant['type'] == 'Ferns') ? 'selected' : ''; ?>>Samambaias
-                    </option>
-                </select>
-            </div>
             <button type="submit" class="bg-blue-500 dark:bg-blue-700 text-white p-2 rounded">Salvar</button>
         </form>
-        <?php if (isset($error)) { echo '<p class="text-red-500 mt-4">' . $error . '</p>'; } ?>
-
-        <h2 class="text-xl font-bold mt-8">Plantas Cadastradas</h2>
-        <table class="min-w-full bg-white dark:bg-gray-800">
-            <thead>
-                <tr>
-                    <th class="px-4 py-2 text-gray-700 dark:text-gray-300">Nome</th>
-                    <th class="px-4 py-2 text-gray-700 dark:text-gray-300">Nome Cientifico</th>
-                    <th class="px-4 py-2 text-gray-700 dark:text-gray-300">Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $sql = "SELECT id, name, scientific_name FROM plants";
-                $result = $conn->query($sql);
-                if ($result->num_rows > 0) {
-                    while($row = $result->fetch_assoc()) {
-                        echo '<tr>';
-                        echo '<td class="border px-4 py-2 text-gray-700 dark:text-gray-300">'.$row["name"].'</td>';
-                        echo '<td class="border px-4 py-2 text-gray-700 dark:text-gray-300">'.$row["scientific_name"].'</td>';
-                        echo '<td class="border px-4 py-2 text-gray-700 dark:text-gray-300">';
-                        echo '<a href="/manage?id='.$row["id"].'" class="text-blue-500 dark:text-blue-300">Editar</a> | ';
-                        echo '<a href="/delete_plant?id='.$row["id"].'" class="text-red-500 dark:text-red-300">Excluir</a>';
-                        echo '</td>';
-                        echo '</tr>';
-                    }
-                } else {
-                    echo '<tr><td colspan="3" class="border px-4 py-2 text-center text-gray-700 dark:text-gray-300">Nehum registro encontrado</td></tr>';
-                }
-                ?>
-            </tbody>
-        </table>
     </div>
     <script src="../utils/scripts.js"></script>
 </body>
