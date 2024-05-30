@@ -7,22 +7,6 @@ if (!isset($_SESSION['user_id']) || !$_SESSION['is_admin']) {
 
 include '../utils/db.php';
 
-function compressImage($source, $destination, $quality) {
-    $info = getimagesize($source);
-
-    if ($info['mime'] == 'image/jpeg') 
-        $image = imagecreatefromjpeg($source);
-    elseif ($info['mime'] == 'image/gif') 
-        $image = imagecreatefromgif($source);
-    elseif ($info['mime'] == 'image/png') 
-        $image = imagecreatefrompng($source);
-
-    imagewebp($image, $destination, $quality);
-    imagedestroy($image);
-
-    return $destination;
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
     $name = $_POST['name'];
@@ -38,13 +22,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Handle the image upload
     if (isset($_FILES["image_path"]) && $_FILES["image_path"]["error"] == 0) {
         $target_dir = "../uploads/";
-        $target_file = $target_dir . pathinfo($_FILES["image_path"]["name"], PATHINFO_FILENAME) . ".webp";
-        $image_temp = $_FILES["image_path"]["tmp_name"];
+        $target_file = $target_dir . basename($_FILES["image_path"]["name"]);
+        
+        if (move_uploaded_file($_FILES["image_path"]["tmp_name"], $target_file)) {
+            // Get image dimensions
+            list($width, $height) = getimagesize($target_file);
 
-        // Compress and convert image to WEBP
-        compressImage($image_temp, $target_file, 80);
+            // Resize if the image is larger than 1000px
+            if ($width > 1000 || $height > 1000) {
+                $resize_command = "convert $target_file -resize 50% $target_file";
+                exec($resize_command);
+            }
 
-        if (file_exists($target_file)) {
+            // Compress the image
+            $compress_command = "convert $target_file -quality 85 $target_file";
+            exec($compress_command);
+
             $image_path = $target_file;
         } else {
             $image_path = $_POST['existing_image_path']; // use existing image if upload fails
@@ -59,19 +52,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sql = "INSERT INTO plants (name, scientific_name, description, planting_instructions, care_instructions, image_path, toxicity, sun_requirements, type, technical_sheet) VALUES ('$name', '$scientific_name', '$description', '$planting_instructions', '$care_instructions', '$image_path', '$toxicity', '$sun_requirements', '$type', '$technical_sheet')";
     }
 
-    if ($conn->query($sql) === TRUE) {
-        header("Location: /");
-        exit();
+    // Execute SQL query and handle errors
+    if (mysqli_query($conn, $sql)) {
+        // success logic
     } else {
-        $error = "Error: " . $conn->error;
+        // error logic
     }
-}
-
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
-    $sql = "SELECT * FROM plants WHERE id=$id";
-    $result = $conn->query($sql);
-    $plant = $result->fetch_assoc();
 }
 ?>
 
@@ -80,72 +66,43 @@ if (isset($_GET['id'])) {
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciar Plantas</title>
-    <link rel="shortcut icon" href="../images/logo.svg" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.1/tailwind.min.css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/flowbite.min.css" rel="stylesheet" />
-    <link href="../style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../utils/styles.css">
 </head>
 
-<body class="bg-gray-100 dark:bg-gray-900 dark:text-white">
-    <?php include '../components/navbar.php'; ?>
-    <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold"><?php echo $id ? 'Editar' : 'Adicionar'; ?> Planta</h1>
-        <form method="POST" class="mt-4" enctype="multipart/form-data">
+<body>
+    <div class="container">
+        <h1>Gerenciar Plantas</h1>
+        <form method="POST" enctype="multipart/form-data">
             <input type="hidden" name="id" value="<?php echo isset($plant['id']) ? $plant['id'] : ''; ?>">
-            <input type="hidden" name="existing_image_path"
-                value="<?php echo isset($plant['image_path']) ? $plant['image_path'] : ''; ?>">
-
             <div class="mb-4">
-                <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome</label>
+                <label for="name">Nome</label>
                 <input type="text" id="name" name="name"
-                    value="<?php echo isset($plant['name']) ? $plant['name'] : ''; ?>"
-                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400">
+                    value="<?php echo isset($plant['name']) ? $plant['name'] : ''; ?>" required>
             </div>
             <div class="mb-4">
-                <label for="scientific_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome
-                    Científico</label>
+                <label for="scientific_name">Nome Científico</label>
                 <input type="text" id="scientific_name" name="scientific_name"
-                    value="<?php echo isset($plant['scientific_name']) ? $plant['scientific_name'] : ''; ?>"
-                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400">
+                    value="<?php echo isset($plant['scientific_name']) ? $plant['scientific_name'] : ''; ?>" required>
             </div>
             <div class="mb-4">
-                <label for="description"
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descrição</label>
+                <label for="description">Descrição</label>
                 <textarea id="description" name="description"
-                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400"><?php echo isset($plant['description']) ? $plant['description'] : ''; ?></textarea>
+                    required><?php echo isset($plant['description']) ? $plant['description'] : ''; ?></textarea>
             </div>
             <div class="mb-4">
-                <label for="planting_instructions"
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Instruções de Plantio</label>
+                <label for="planting_instructions">Instruções de Plantio</label>
                 <textarea id="planting_instructions" name="planting_instructions"
-                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400"><?php echo isset($plant['planting_instructions']) ? $plant['planting_instructions'] : ''; ?></textarea>
+                    required><?php echo isset($plant['planting_instructions']) ? $plant['planting_instructions'] : ''; ?></textarea>
             </div>
             <div class="mb-4">
-                <label for="care_instructions"
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cuidados</label>
+                <label for="care_instructions">Instruções de Cuidados</label>
                 <textarea id="care_instructions" name="care_instructions"
-                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400"><?php echo isset($plant['care_instructions']) ? $plant['care_instructions'] : ''; ?></textarea>
+                    required><?php echo isset($plant['care_instructions']) ? $plant['care_instructions'] : ''; ?></textarea>
             </div>
             <div class="mb-4">
-                <label for="technical_sheet" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ficha
-                    Técnica</label>
-                <textarea id="technical_sheet" name="technical_sheet"
-                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400"><?php echo isset($plant['technical_sheet']) ? $plant['technical_sheet'] : ''; ?></textarea>
-            </div>
-            <div class="mb-4">
-                <label for="image_path"
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imagem</label>
-                <input type="file" id="image_path" name="image_path"
-                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400">
-            </div>
-            <div class="mb-4">
-                <label for="toxicity"
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Toxicidade</label>
-                <select id="toxicity" name="toxicity"
-                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400">
+                <label for="toxicity">Toxicidade</label>
+                <select id="toxicity" name="toxicity" required>
                     <option value="0"
                         <?php echo (isset($plant['toxicity']) && $plant['toxicity'] == 0) ? 'selected' : ''; ?>>Sem
                         toxicidade</option>
@@ -155,10 +112,8 @@ if (isset($_GET['id'])) {
                 </select>
             </div>
             <div class="mb-4">
-                <label for="sun_requirements"
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ambiente</label>
-                <select id="sun_requirements" name="sun_requirements"
-                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400">
+                <label for="sun_requirements">Ambiente</label>
+                <select id="sun_requirements" name="sun_requirements" required>
                     <option value="Full sun"
                         <?php echo (isset($plant['sun_requirements']) && $plant['sun_requirements'] == 'Full sun') ? 'selected' : ''; ?>>
                         Sol-pleno</option>
@@ -173,7 +128,7 @@ if (isset($_GET['id'])) {
                         Sombra</option>
                 </select>
             </div>
-            <button type="submit" class="bg-blue-500 dark:bg-blue-700 text-white p-2 rounded">Salvar</button>
+            <button type="submit" class="bg-blue-500 text-white p-2 rounded">Salvar</button>
         </form>
     </div>
     <script src="../utils/scripts.js"></script>
