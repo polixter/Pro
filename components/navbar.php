@@ -77,7 +77,7 @@ include $_SERVER['DOCUMENT_ROOT'].'/utils/db.php';
                 <?php
                 if (isset($_SESSION) && $_SESSION) { ?>
                 <li>
-                    <a href="../utils/logout.php"
+                    <a href="/utils/logout.php"
                         class="text-red-500 hover:bg-gray-50 border-b border-gray-100 md:hover:bg-transparent md:border-0 block pl-3 pr-4 py-2 md:hover:text-green-500 md:p-0 md:dark:hover:text-white dark:text-red-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Logout</a>
                 </li>
                 <?php } ?>
