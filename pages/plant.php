@@ -6,10 +6,22 @@ define('BASE_URL', 'http://' . $_SERVER['HTTP_HOST'] . '/');
 // Obter ID da planta da URL amigável
 if (isset($_GET['id'])) {
     $plant_id = $_GET['id'];
-    
+
+    // Verificar se o ID é um número inteiro válido
+    if (!filter_var($plant_id, FILTER_VALIDATE_INT)) {
+        // Redirecionar se o ID não for válido
+        header("Location: /");
+        exit();
+    }
+
     // Buscar informações da planta no banco de dados
     $sql = "SELECT * FROM plants WHERE id = ?";
     $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        // Tratamento de erro de preparação de consulta
+        die('Erro na preparação da consulta: ' . $conn->error);
+    }
+
     $stmt->bind_param("i", $plant_id);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -19,12 +31,15 @@ if (isset($_GET['id'])) {
     if (!$plant) {
         $plant = ['name' => 'Planta não encontrada'];
     }
+
+    $stmt->close();
 } else {
     // Redirecionar se nenhum ID for fornecido
     header("Location: /");
     exit();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

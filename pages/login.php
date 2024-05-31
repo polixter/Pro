@@ -6,12 +6,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $sql = "SELECT * FROM users WHERE username='$username'";
-    $result = $conn->query($sql);
+    // Usar uma consulta preparada para evitar injeção SQL
+    $stmt = $conn->prepare("SELECT * FROM users WHERE username=?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
+        // Verificar a senha
         if (password_verify($password, $user['password'])) {
+            // Iniciar a sessão do usuário
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['is_admin'] = $user['is_admin'];
             header("Location: /");
@@ -20,10 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = "Senha incorreta";
         }
     } else {
-        $error = "Usuario não encontrado";
+        $error = "Usuário não encontrado";
     }
+    
+    $stmt->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -42,7 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body class="bg-gray-200 dark:bg-gray-900 dark:text-white">
     <?php include '../components/navbar.php'; ?>
-    <div class="min-h-screen flex items-center justify-center bg-gray-200 dark:bg-gray-900 dark:text-white px-4 sm:px-0">
+    <div
+        class="min-h-screen flex items-center justify-center bg-gray-200 dark:bg-gray-900 dark:text-white px-4 sm:px-0">
         <div class="max-w-sm w-full space-y-12">
             <form method="POST" action="/login" class="space-y-6">
                 <input type="hidden" name="remember" value="true">
@@ -62,7 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div>
                     <?php if (isset($error)): ?>
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-3" role="alert">
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-3"
+                        role="alert">
                         <strong class="font-bold">Erro:</strong>
                         <span class="block sm:inline"><?php echo $error; ?></span>
                     </div>
