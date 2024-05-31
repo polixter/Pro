@@ -71,7 +71,7 @@ if (isset($_GET['id'])) {
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white">
     <?php include '../components/navbar.php'; ?>
     <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold"><?php echo $id ? 'Editar' : 'Adicionar'; ?> Planta</h1>
+        <h1 class="text-2xl font-bold">Planta</h1>
         <form method="POST" class="mt-4" enctype="multipart/form-data">
             <input type="hidden" name="id" value="<?php echo isset($plant['id']) ? $plant['id'] : ''; ?>">
             <input type="hidden" name="existing_image_path"
