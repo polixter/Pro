@@ -23,21 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_FILES["image_path"]) && $_FILES["image_path"]["error"] == 0) {
         $target_dir = "../uploads/";
         $target_file = $target_dir . basename($_FILES["image_path"]["name"]);
-        
         if (move_uploaded_file($_FILES["image_path"]["tmp_name"], $target_file)) {
-            // Get image dimensions
-            list($width, $height) = getimagesize($target_file);
-
-            // Resize if the image is larger than 1000px
-            if ($width > 1000 || $height > 1000) {
-                $resize_command = "convert $target_file -resize 50% $target_file";
-                exec($resize_command);
-            }
-
-            // Compress the image
-            $compress_command = "convert $target_file -quality 85 $target_file";
-            exec($compress_command);
-
             $image_path = $target_file;
         } else {
             $image_path = $_POST['existing_image_path']; // use existing image if upload fails
@@ -52,11 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sql = "INSERT INTO plants (name, scientific_name, description, planting_instructions, care_instructions, image_path, toxicity, sun_requirements, type, technical_sheet) VALUES ('$name', '$scientific_name', '$description', '$planting_instructions', '$care_instructions', '$image_path', '$toxicity', '$sun_requirements', '$type', '$technical_sheet')";
     }
 
-    // Execute SQL query and handle errors
-    if (mysqli_query($conn, $sql)) {
-        // success logic
+    if ($conn->query($sql) === TRUE) {
+        header("Location: /");
+        exit();
     } else {
-        // error logic
+        $error = "Error: " . $conn->error;
     }
 }
 
@@ -73,54 +59,85 @@ if (isset($_GET['id'])) {
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciar Plantas</title>
-    <link rel="stylesheet" href="../utils/styles.css">
+    <link rel="shortcut icon" href="../images/logo.svg" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.1/tailwind.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/flowbite.min.css" rel="stylesheet" />
+    <link href="../style.css" rel="stylesheet" />
 </head>
 
-<body>
-    <div class="container">
-        <h1>Gerenciar Plantas</h1>
-        <form method="POST" enctype="multipart/form-data">
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-white">
+    <?php include '../components/navbar.php'; ?>
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold"><?php echo $id ? 'Editar' : 'Adicionar'; ?> Planta</h1>
+        <form method="POST" class="mt-4" enctype="multipart/form-data">
             <input type="hidden" name="id" value="<?php echo isset($plant['id']) ? $plant['id'] : ''; ?>">
+            <input type="hidden" name="existing_image_path"
+                value="<?php echo isset($plant['image_path']) ? $plant['image_path'] : ''; ?>">
+
             <div class="mb-4">
-                <label for="name">Nome</label>
+                <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome</label>
                 <input type="text" id="name" name="name"
-                    value="<?php echo isset($plant['name']) ? $plant['name'] : ''; ?>" required>
+                    value="<?php echo isset($plant['name']) ? $plant['name'] : ''; ?>"
+                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400">
             </div>
             <div class="mb-4">
-                <label for="scientific_name">Nome Científico</label>
+                <label for="scientific_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome
+                    Científico</label>
                 <input type="text" id="scientific_name" name="scientific_name"
-                    value="<?php echo isset($plant['scientific_name']) ? $plant['scientific_name'] : ''; ?>" required>
+                    value="<?php echo isset($plant['scientific_name']) ? $plant['scientific_name'] : ''; ?>"
+                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400">
             </div>
             <div class="mb-4">
-                <label for="description">Descrição</label>
+                <label for="description"
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descrição</label>
                 <textarea id="description" name="description"
-                    required><?php echo isset($plant['description']) ? $plant['description'] : ''; ?></textarea>
+                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400"><?php echo isset($plant['description']) ? $plant['description'] : ''; ?></textarea>
             </div>
             <div class="mb-4">
-                <label for="planting_instructions">Instruções de Plantio</label>
+                <label for="planting_instructions"
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Instruções de Plantio</label>
                 <textarea id="planting_instructions" name="planting_instructions"
-                    required><?php echo isset($plant['planting_instructions']) ? $plant['planting_instructions'] : ''; ?></textarea>
+                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400"><?php echo isset($plant['planting_instructions']) ? $plant['planting_instructions'] : ''; ?></textarea>
             </div>
             <div class="mb-4">
-                <label for="care_instructions">Instruções de Cuidados</label>
+                <label for="care_instructions"
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cuidados</label>
                 <textarea id="care_instructions" name="care_instructions"
-                    required><?php echo isset($plant['care_instructions']) ? $plant['care_instructions'] : ''; ?></textarea>
+                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400"><?php echo isset($plant['care_instructions']) ? $plant['care_instructions'] : ''; ?></textarea>
             </div>
             <div class="mb-4">
-                <label for="toxicity">Toxicidade</label>
-                <select id="toxicity" name="toxicity" required>
+                <label for="technical_sheet" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ficha
+                    Técnica</label>
+                <textarea id="technical_sheet" name="technical_sheet"
+                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400"><?php echo isset($plant['technical_sheet']) ? $plant['technical_sheet'] : ''; ?></textarea>
+            </div>
+            <div class="mb-4">
+                <label for="image_path"
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imagem</label>
+                <input type="file" id="image_path" name="image_path"
+                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400">
+            </div>
+            <div class="mb-4">
+                <label for="toxicity"
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Toxicidade</label>
+                <select id="toxicity" name="toxicity"
+                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400">
                     <option value="0"
                         <?php echo (isset($plant['toxicity']) && $plant['toxicity'] == 0) ? 'selected' : ''; ?>>Sem
                         toxicidade</option>
                     <option value="1"
-                        <?php echo (isset($plant['toxicity']) && $plant['toxicity'] == 1) ? 'selected' : ''; ?>>Tóxica
+                        <?php echo (isset($plant['toxicity']) && $plant['toxicity'] == 1) ? 'selected' : ''; ?>>Toxica
                     </option>
                 </select>
             </div>
             <div class="mb-4">
-                <label for="sun_requirements">Ambiente</label>
-                <select id="sun_requirements" name="sun_requirements" required>
+                <label for="sun_requirements"
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ambiente</label>
+                <select id="sun_requirements" name="sun_requirements"
+                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400">
                     <option value="Full sun"
                         <?php echo (isset($plant['sun_requirements']) && $plant['sun_requirements'] == 'Full sun') ? 'selected' : ''; ?>>
                         Sol-pleno</option>
@@ -135,7 +152,7 @@ if (isset($_GET['id'])) {
                         Sombra</option>
                 </select>
             </div>
-            <button type="submit" class="bg-blue-500 text-white p-2 rounded">Salvar</button>
+            <button type="submit" class="bg-blue-500 dark:bg-blue-700 text-white p-2 rounded">Salvar</button>
         </form>
     </div>
     <script src="../utils/scripts.js"></script>
