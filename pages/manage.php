@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id']) || !$_SESSION['is_admin']) {
 include '../utils/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id = $_POST['id'];
+    $id = $_POST['id'] ?? null;
     $name = $_POST['name'];
     $scientific_name = $_POST['scientific_name'];
     $description = $_POST['description'];
@@ -16,7 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $care_instructions = $_POST['care_instructions'];
     $toxicity = $_POST['toxicity'];
     $sun_requirements = $_POST['sun_requirements'];
-    $type = $_POST['type'];
     $technical_sheet = $_POST['technical_sheet'];
 
     // Handle the image upload
@@ -33,24 +32,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($id) {
-        $sql = "UPDATE plants SET name='$name', scientific_name='$scientific_name', description='$description', planting_instructions='$planting_instructions', care_instructions='$care_instructions', image_path='$image_path', toxicity='$toxicity', sun_requirements='$sun_requirements', type='$type', technical_sheet='$technical_sheet' WHERE id=$id";
+        $stmt = $conn->prepare("UPDATE plants SET name=?, scientific_name=?, description=?, planting_instructions=?, care_instructions=?, image_path=?, toxicity=?, sun_requirements=?, technical_sheet=? WHERE id=?");
+        $stmt->bind_param("sssssssssi", $name, $scientific_name, $description, $planting_instructions, $care_instructions, $image_path, $toxicity, $sun_requirements, $technical_sheet, $id);
     } else {
-        $sql = "INSERT INTO plants (name, scientific_name, description, planting_instructions, care_instructions, image_path, toxicity, sun_requirements, type, technical_sheet) VALUES ('$name', '$scientific_name', '$description', '$planting_instructions', '$care_instructions', '$image_path', '$toxicity', '$sun_requirements', '$type', '$technical_sheet')";
+        $stmt = $conn->prepare("INSERT INTO plants (name, scientific_name, description, planting_instructions, care_instructions, image_path, toxicity, sun_requirements, technical_sheet) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssssss", $name, $scientific_name, $description, $planting_instructions, $care_instructions, $image_path, $toxicity, $sun_requirements, $technical_sheet);
     }
 
-    if ($conn->query($sql) === TRUE) {
+    if ($stmt->execute() === TRUE) {
         header("Location: /");
         exit();
     } else {
-        $error = "Error: " . $conn->error;
+        $error = "Error: " . $stmt->error;
     }
+
+    $stmt->close();
 }
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $sql = "SELECT * FROM plants WHERE id=$id";
-    $result = $conn->query($sql);
+    $stmt = $conn->prepare("SELECT * FROM plants WHERE id=?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
     $plant = $result->fetch_assoc();
+    $stmt->close();
 }
 ?>
 
