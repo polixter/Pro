@@ -47,7 +47,7 @@ if (isset($_GET['id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($plant['name']); ?> - Pro-Jardim Plantas</title>
+    <title><?php echo htmlspecialchars($plant['name']); ?> - Banco de Plantas Pro-Jardim</title>
     <link rel="shortcut icon" href="/images/logo.svg" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.1/tailwind.min.css" />
@@ -58,7 +58,7 @@ if (isset($_GET['id'])) {
     <?php include $_SERVER['DOCUMENT_ROOT'].'/components/navbar.php'; ?>
     <div class="container mx-auto p-4">
         <?php
-        if ($plant && $plant['name'] !== 'Planta não encontrada') {
+        if ($plant && $plant['name'] !== 'Planta não encontradasss') {
             echo '<div class="bg-gray-200 dark:bg-gray-900 mx-auto overflow-y-auto max-w-full sm:max-w-md rounded-lg">';
             echo '<div class="flex justify-center">';
             echo '<img src="/'.htmlspecialchars($plant["image_path"]).'" alt="'.htmlspecialchars($plant["name"]).'" class="block w-full aspect-[4/3] object-cover rounded-lg overflow-hidden">';
