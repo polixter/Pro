@@ -103,7 +103,54 @@ session_start();
                         </div>
                     </li>
                     <li>
-                        <div>
+                        <div class="flex items-center">
+                            <input type="checkbox" value="Palmeiras" id="Palmeiras-checkbox"
+                                class="category-checkbox w-4 h-4 text-lime-600 bg-gray-100 border-gray-300 rounded focus:ring-lime-500 dark:focus:ring-lime-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                            <label for="Palmeiras-checkbox"
+                                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Palmeiras</label>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <input type="checkbox" value="Frutíferas" id="Frutíferas-checkbox"
+                                class="category-checkbox w-4 h-4 text-lime-600 bg-gray-100 border-gray-300 rounded focus:ring-lime-500 dark:focus:ring-lime-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                            <label for="Frutíferas-checkbox"
+                                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Frutíferas</label>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <input type="checkbox" value="Trepadeiras" id="Trepadeiras-checkbox"
+                                class="category-checkbox w-4 h-4 text-lime-600 bg-gray-100 border-gray-300 rounded focus:ring-lime-500 dark:focus:ring-lime-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                            <label for="Trepadeiras-checkbox"
+                                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Trepadeiras</label>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <input type="checkbox" value="Forrações" id="Forrações-checkbox"
+                                class="category-checkbox w-4 h-4 text-lime-600 bg-gray-100 border-gray-300 rounded focus:ring-lime-500 dark:focus:ring-lime-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                            <label for="Forrações-checkbox"
+                                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Forrações</label>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <input type="checkbox" value="Aquáticas" id="Aquáticas-checkbox"
+                                class="category-checkbox w-4 h-4 text-lime-600 bg-gray-100 border-gray-300 rounded focus:ring-lime-500 dark:focus:ring-lime-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                            <label for="Aquáticas-checkbox"
+                                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Aquáticas</label>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <input type="checkbox" value="Flores" id="flores-checkbox"
+                                class="category-checkbox w-4 h-4 text-lime-600 bg-gray-100 border-gray-300 rounded focus:ring-lime-500 dark:focus:ring-lime-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                            <label for="flores-checkbox"
+                                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Flores</label>
+                        </div>
+                    </li>
+
                 </ul>
             </div>
 
