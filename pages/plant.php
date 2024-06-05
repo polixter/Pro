@@ -84,7 +84,10 @@ if (isset($_GET['id'])) {
             echo '</ul>';
             echo '</div>';
         } else {
+            echo '<div class="p-4 flex flex-col items-center">';
+            echo '<img src="https://v3.projardimfloricultura.com.br/planta-nao-encontrada.png" class="w-1/2 md:w-1/3">';
             echo '<p class="text-gray-700 dark:text-gray-300">Planta não encontrada.</p>';
+            echo '</div>';
         }
 
         $conn->close();
