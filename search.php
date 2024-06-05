@@ -7,29 +7,60 @@ $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1;
 
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 $sun_requirements = isset($_GET['sun_requirements']) ? $_GET['sun_requirements'] : '';
-$category = isset($_GET['category']) ? $_GET['category'] : '';
+$categories = isset($_GET['categories']) ? explode(',', $_GET['categories']) : [];
 $toxicity = isset($_GET['toxicity']) ? $_GET['toxicity'] : '';
 
-$sql = "SELECT DISTINCT p.id, p.name, p.scientific_name, p.image_path 
+$sql = "SELECT p.id, p.name, p.scientific_name, p.image_path 
         FROM plants p
         LEFT JOIN plant_categories pc ON p.id = pc.plant_id
         LEFT JOIN categories c ON pc.category_id = c.id
         WHERE 1=1";
 
+$params = [];
+$types = '';
+
 if (strlen($search) >= 2) {
-    $sql .= " AND (p.name LIKE '%$search%' OR p.scientific_name LIKE '%$search%')";
+    $sql .= " AND (p.name LIKE ? OR p.scientific_name LIKE ?)";
+    $searchParam = '%' . $search . '%';
+    array_push($params, $searchParam, $searchParam);
+    $types .= 'ss';
 }
 if ($sun_requirements) {
-    $sql .= " AND p.sun_requirements='$sun_requirements'";
-}
-if ($category) {
-    $sql .= " AND c.name='$category'";
+    $sql .= " AND p.sun_requirements=?";
+    array_push($params, $sun_requirements);
+    $types .= 's';
 }
 if ($toxicity !== '') {
-    $sql .= " AND p.toxicity=$toxicity";
+    $sql .= " AND p.toxicity=?";
+    array_push($params, $toxicity);
+    $types .= 'i';
+}
+if (!empty($categories)) {
+    $category_placeholders = implode(',', array_fill(0, count($categories), '?'));
+    $sql .= " AND c.name IN ($category_placeholders)";
+    $params = array_merge($params, $categories);
+    $types .= str_repeat('s', count($categories));
+
+    $sql .= " GROUP BY p.id
+              HAVING COUNT(DISTINCT c.name) = ?";
+    array_push($params, count($categories));
+    $types .= 'i';
+} else {
+    $sql .= " GROUP BY p.id";
 }
 
-$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
+}
+
+// Adicione logs para depuração
+error_log("SQL: " . $sql);
+error_log("Params: " . implode(', ', $params));
+
+$stmt->execute();
+$result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {

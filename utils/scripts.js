@@ -23,35 +23,38 @@ if (
 }
 
 // Plant Search and Load Script
+window.onload = function () {
+  // Adiciona eventos de mudança aos checkboxes
+  var categoryCheckboxes = document.querySelectorAll(".category-checkbox");
+  categoryCheckboxes.forEach(function(checkbox) {
+    checkbox.addEventListener("change", function() {
+      searchPlants();
+    });
+  });
+
+  // Chama a função searchPlants para carregar os resultados iniciais
+  searchPlants();
+};
+
 function searchPlants() {
   var search = document.getElementById("search").value;
   var sunRequirement = document.getElementById("sun-requirements").value;
-  var category = document.getElementById("category").value;
+  var categoryCheckboxes = document.querySelectorAll(".category-checkbox:checked");
   var toxicity = document.getElementById("toxicity").value;
 
-  if (search.length >= 2 || sunRequirement || category || toxicity) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "../search.php?search=" + search + "&sun_requirements=" + sunRequirement + "&category=" + category +
-      "&toxicity=" + toxicity, true);
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState == 4 && xhr.status == 200) {
-        var resultsElement = document.getElementById("results");
-        if (resultsElement) {
-          resultsElement.innerHTML = xhr.responseText;
-        } else {
-          console.error("Element with ID 'results' not found.");
-        }
-      }
-    };
-    xhr.send();
-  } else {
-    loadAllPlants();
-  }
-}
+  var categories = Array.from(categoryCheckboxes).map(checkbox => checkbox.value).join(",");
 
-function loadAllPlants() {
+  // Construir a URL de requisição corretamente
+  var url = "../search.php?search=" + encodeURIComponent(search) + "&sun_requirements=" + encodeURIComponent(sunRequirement) +
+            "&toxicity=" + encodeURIComponent(toxicity);
+
+  // Adiciona o parâmetro de categorias apenas se houver categorias selecionadas
+  if (categories) {
+    url += "&categories=" + encodeURIComponent(categories);
+  }
+
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", "../search.php?search=&sun_requirements=&category=&toxicity=", true);
+  xhr.open("GET", url, true);
   xhr.onreadystatechange = function () {
     if (xhr.readyState == 4 && xhr.status == 200) {
       var resultsElement = document.getElementById("results");
@@ -65,9 +68,27 @@ function loadAllPlants() {
   xhr.send();
 }
 
-window.onload = function () {
-  loadAllPlants();
-};
+function loadAllPlants() {
+  var xhr = new XMLHttpRequest();
+  var url = "../search.php?search=&sun_requirements=&toxicity=";
+  
+  xhr.open("GET", url, true);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      var resultsElement = document.getElementById("results");
+      if (resultsElement) {
+        resultsElement.innerHTML = xhr.responseText;
+      } else {
+        console.error("Element with ID 'results' not found.");
+      }
+    }
+  };
+  xhr.send();
+}
+
+
+
+
 
 // Theme Toggle Script
 var themeToggleDarkIcon = document.getElementById("theme-toggle-dark-icon");
