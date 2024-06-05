@@ -21,9 +21,9 @@ session_start();
     <div class="container mx-auto p-4">
         <form class="mb-4 flex space-x-4">
             <input type="text" id="search" onkeyup="searchPlants()" placeholder="Pesquisar..."
-                class="w-full p-2 border border-primary rounded dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10">
+                class="w-full p-2 border border-primary rounded dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 focus:z-10">
             <select id="sun-requirements" onchange="searchPlants()"
-                class="hidden md:block p-2 border border-primary rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10">
+                class="hidden md:block p-2 border border-primary rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-lime-500 focus:border-lime-500 focus:z-10">
                 <option value="">Ambiente</option>
                 <option value="Full sun">Sol-pleno</option>
                 <option value="Part sun">Sol-parcial</option>
@@ -103,13 +103,13 @@ session_start();
                         </div>
                     </li>
                     <li>
-                        <div cl <!-- Adicione mais checkboxes para outras categorias conforme necessário -->
+                        <div>
                 </ul>
             </div>
 
 
             <select id="toxicity" onchange="searchPlants()"
-                class="hidden md:block p-2 border border-primary rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10">
+                class="hidden md:block p-2 border border-primary rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-lime-500 focus:border-lime-500 focus:z-10">
                 <option value="">Toxicidade</option>
                 <option value="0">Sem Toxicidade</option>
                 <option value="1">Toxica</option>

@@ -74,7 +74,6 @@ if ($result->num_rows > 0) {
         echo '</a>';
         echo '<h2 class="text-lg font-bold mt-2 text-gray-900 dark:text-gray-100">'.$row["name"].'</h2>';
         echo '<p class="italic text-gray-600 dark:text-gray-400">'.$row["scientific_name"].'</p>';
-        echo '<a href="'.$plant_url.'" class="text-blue-500 dark:text-blue-300 mt-4 inline-block">Ver mais</a>';
         // Adicionar o botão de edição apenas para administradores
         if ($is_admin) {
             echo '<a href="/manage?id='.$row["id"].'" class="text-yellow-500 dark:text-yellow-300 mt-4 inline-block ml-2">Editar</a>';
