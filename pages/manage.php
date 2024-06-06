@@ -40,6 +40,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($stmt->execute() === TRUE) {
+        $plant_id = $id ? $id : $stmt->insert_id;
+        
+        // Atualiza as categorias
+        $stmt = $conn->prepare("DELETE FROM plant_categories WHERE plant_id = ?");
+        $stmt->bind_param("i", $plant_id);
+        $stmt->execute();
+        $stmt->close();
+
+        if (isset($_POST['categories'])) {
+            $stmt = $conn->prepare("INSERT INTO plant_categories (plant_id, category_id) VALUES (?, ?)");
+            foreach ($_POST['categories'] as $category_id) {
+                $stmt->bind_param("ii", $plant_id, $category_id);
+                $stmt->execute();
+            }
+            $stmt->close();
+        }
+
         header("Location: /");
         exit();
     } else {
@@ -58,6 +75,7 @@ if (isset($_GET['id'])) {
     $plant = $result->fetch_assoc();
     $stmt->close();
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -158,7 +176,50 @@ if (isset($_GET['id'])) {
                         Sombra</option>
                 </select>
             </div>
-            <button type="submit" class="bg-blue-500 dark:bg-blue-700 text-white p-2 rounded">Salvar</button>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Categorias</label>
+                <?php
+                // Define as categorias e seus IDs
+                $categories = [
+                    23 => 'Flores',
+                    11 => 'Anuais',
+                    15 => 'Folhagens',
+                    21 => 'Forrações',
+                    18 => 'Palmeiras',
+                    12 => 'Perenes',
+                    16 => 'Arbustos',
+                    19 => 'Frutíferas',
+                    20 => 'Trepadeiras',
+                    13 => 'Ervas',
+                    14 => 'Suculentas',
+                    22 => 'Aquaticas',
+                    17 => 'Arvores'
+                ];
+
+                // Busca as categorias atuais da planta
+                $plant_categories = [];
+                if (isset($plant['id'])) {
+                    $stmt = $conn->prepare("SELECT category_id FROM plant_categories WHERE plant_id = ?");
+                    $stmt->bind_param("i", $plant['id']);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    while ($row = $result->fetch_assoc()) {
+                        $plant_categories[] = $row['category_id'];
+                    }
+                    $stmt->close();
+                }
+
+                // Gera os checkboxes
+                foreach ($categories as $id => $name) {
+                    $checked = in_array($id, $plant_categories) ? 'checked' : '';
+                    echo "<div class='flex items-center mb-2'>
+                            <input type='checkbox' id='category_$id' name='categories[]' value='$id' $checked class='mr-2'>
+                            <label for='category_$id' class='text-sm font-medium text-gray-700 dark:text-gray-300'>$name</label>
+                          </div>";
+                }
+                ?>
+            </div>
+            <button type="submit" class="bg-lime-500 dark:bg-lime-700 text-white p-2 rounded">Salvar</button>
         </form>
     </div>
     <script src="../utils/scripts.js"></script>
