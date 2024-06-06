@@ -11,120 +11,94 @@ tailwind.config = {
   },
 };
 
-// Dark Mode Toggle Script
-if (
-  localStorage.getItem("color-theme") === "dark" ||
-  (!("color-theme" in localStorage) &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches)
-) {
-  document.documentElement.classList.add("dark");
-} else {
-  document.documentElement.classList.remove("dark");
-}
+// Dark Mode Initialization
+(function() {
+  const isDarkMode = localStorage.getItem("color-theme") === "dark" ||
+    (!localStorage.getItem("color-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+  if (isDarkMode) {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+})();
 
 // Plant Search and Load Script
-window.onload = function () {
-  // Adiciona eventos de mudança aos checkboxes
-  var categoryCheckboxes = document.querySelectorAll(".category-checkbox");
-  categoryCheckboxes.forEach(function(checkbox) {
-    checkbox.addEventListener("change", function() {
-      searchPlants();
-    });
+window.addEventListener("load", function() {
+  const categoryCheckboxes = document.querySelectorAll(".category-checkbox");
+  
+  categoryCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener("change", searchPlants);
   });
 
-  // Chama a função searchPlants para carregar os resultados iniciais
   searchPlants();
-};
+});
 
 function searchPlants() {
-  var search = document.getElementById("search").value;
-  var sunRequirement = document.getElementById("sun-requirements").value;
-  var categoryCheckboxes = document.querySelectorAll(".category-checkbox:checked");
-  var toxicity = document.getElementById("toxicity").value;
+  const search = document.getElementById("search").value;
+  const sunRequirement = document.getElementById("sun-requirements").value;
+  const toxicity = document.getElementById("toxicity").value;
+  const categories = Array.from(document.querySelectorAll(".category-checkbox:checked"))
+                          .map(checkbox => checkbox.value)
+                          .join(",");
 
-  var categories = Array.from(categoryCheckboxes).map(checkbox => checkbox.value).join(",");
+  const params = new URLSearchParams({
+    search,
+    sun_requirements: sunRequirement,
+    toxicity
+  });
 
-  // Construir a URL de requisição corretamente
-  var url = "../search.php?search=" + encodeURIComponent(search) + "&sun_requirements=" + encodeURIComponent(sunRequirement) +
-            "&toxicity=" + encodeURIComponent(toxicity);
-
-  // Adiciona o parâmetro de categorias apenas se houver categorias selecionadas
   if (categories) {
-    url += "&categories=" + encodeURIComponent(categories);
+    params.append("categories", categories);
   }
 
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", url, true);
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState == 4 && xhr.status == 200) {
-      var resultsElement = document.getElementById("results");
+  fetch(`../search.php?${params}`)
+    .then(response => response.text())
+    .then(data => {
+      const resultsElement = document.getElementById("results");
       if (resultsElement) {
-        resultsElement.innerHTML = xhr.responseText;
+        resultsElement.innerHTML = data;
       } else {
         console.error("Element with ID 'results' not found.");
       }
-    }
-  };
-  xhr.send();
+    })
+    .catch(error => console.error('Error:', error));
 }
 
 function loadAllPlants() {
-  var xhr = new XMLHttpRequest();
-  var url = "../search.php?search=&sun_requirements=&toxicity=";
-  
-  xhr.open("GET", url, true);
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState == 4 && xhr.status == 200) {
-      var resultsElement = document.getElementById("results");
+  fetch("../search.php?search=&sun_requirements=&toxicity=")
+    .then(response => response.text())
+    .then(data => {
+      const resultsElement = document.getElementById("results");
       if (resultsElement) {
-        resultsElement.innerHTML = xhr.responseText;
+        resultsElement.innerHTML = data;
       } else {
         console.error("Element with ID 'results' not found.");
       }
-    }
-  };
-  xhr.send();
+    })
+    .catch(error => console.error('Error:', error));
 }
-
-
-
-
 
 // Theme Toggle Script
-var themeToggleDarkIcon = document.getElementById("theme-toggle-dark-icon");
-var themeToggleLightIcon = document.getElementById("theme-toggle-light-icon");
+document.addEventListener("DOMContentLoaded", function() {
+  const themeToggleDarkIcon = document.getElementById("theme-toggle-dark-icon");
+  const themeToggleLightIcon = document.getElementById("theme-toggle-light-icon");
+  const themeToggleBtn = document.getElementById("theme-toggle");
 
-if (
-  localStorage.getItem("color-theme") === "dark" ||
-  (!("color-theme" in localStorage) &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches)
-) {
-  themeToggleLightIcon.classList.remove("hidden");
-} else {
-  themeToggleDarkIcon.classList.remove("hidden");
-}
+  const isDarkMode = localStorage.getItem("color-theme") === "dark" ||
+    (!localStorage.getItem("color-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
 
-var themeToggleBtn = document.getElementById("theme-toggle");
-
-themeToggleBtn.addEventListener("click", function () {
-  themeToggleDarkIcon.classList.toggle("hidden");
-  themeToggleLightIcon.classList.toggle("hidden");
-
-  if (localStorage.getItem("color-theme")) {
-    if (localStorage.getItem("color-theme") === "light") {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("color-theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("color-theme", "light");
-    }
+  if (isDarkMode) {
+    themeToggleLightIcon.classList.remove("hidden");
   } else {
-    if (document.documentElement.classList.contains("dark")) {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("color-theme", "light");
-    } else {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("color-theme", "dark");
-    }
+    themeToggleDarkIcon.classList.remove("hidden");
   }
+
+  themeToggleBtn.addEventListener("click", () => {
+    themeToggleDarkIcon.classList.toggle("hidden");
+    themeToggleLightIcon.classList.toggle("hidden");
+
+    const newTheme = document.documentElement.classList.toggle("dark") ? "dark" : "light";
+    localStorage.setItem("color-theme", newTheme);
+  });
 });
