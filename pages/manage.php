@@ -19,16 +19,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $technical_sheet = $_POST['technical_sheet'];
 
     // Handle the image upload
-    if (isset($_FILES["image_path"]) && $_FILES["image_path"]["error"] == 0) {
+    $image_path = $_POST['existing_image_path']; // default to existing image
+    if (isset($_FILES["image_path"]) && $_FILES["image_path"]["error"] === 0) {
         $target_dir = "../uploads/";
         $target_file = $target_dir . basename($_FILES["image_path"]["name"]);
         if (move_uploaded_file($_FILES["image_path"]["tmp_name"], $target_file)) {
             $image_path = $target_file;
-        } else {
-            $image_path = $_POST['existing_image_path']; // use existing image if upload fails
         }
-    } else {
-        $image_path = $_POST['existing_image_path']; // use existing image if no new file uploaded
     }
 
     if ($id) {
@@ -39,9 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("sssssssss", $name, $scientific_name, $description, $planting_instructions, $care_instructions, $image_path, $toxicity, $sun_requirements, $technical_sheet);
     }
 
-    if ($stmt->execute() === TRUE) {
+    if ($stmt->execute()) {
         $plant_id = $id ? $id : $stmt->insert_id;
-        
+
         // Atualiza as categorias
         $stmt = $conn->prepare("DELETE FROM plant_categories WHERE plant_id = ?");
         $stmt->bind_param("i", $plant_id);
@@ -66,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->close();
 }
 
+$plant = null;
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
     $stmt = $conn->prepare("SELECT * FROM plants WHERE id=?");
@@ -85,11 +83,11 @@ if (isset($_GET['id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciar Plantas - Banco de Plantas Pro-Jardim</title>
-    <link rel="shortcut icon" href="../images/logo.svg" />
+    <link rel="shortcut icon" href="../images/logo.svg">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.1/tailwind.min.css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/flowbite.min.css" rel="stylesheet" />
-    <link href="../style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.1/tailwind.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/flowbite.min.css" rel="stylesheet">
+    <link href="../style.css" rel="stylesheet">
 </head>
 
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white">
@@ -97,47 +95,35 @@ if (isset($_GET['id'])) {
     <div class="container mx-auto p-4">
         <h1 class="text-2xl font-bold">Planta</h1>
         <form method="POST" class="mt-4" enctype="multipart/form-data">
-            <input type="hidden" name="id" value="<?php echo isset($plant['id']) ? $plant['id'] : ''; ?>">
-            <input type="hidden" name="existing_image_path"
-                value="<?php echo isset($plant['image_path']) ? $plant['image_path'] : ''; ?>">
+            <input type="hidden" name="id" value="<?= $plant['id'] ?? '' ?>">
+            <input type="hidden" name="existing_image_path" value="<?= $plant['image_path'] ?? '' ?>">
 
-            <div class="mb-4">
-                <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome</label>
-                <input type="text" id="name" name="name"
-                    value="<?php echo isset($plant['name']) ? $plant['name'] : ''; ?>"
-                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400">
-            </div>
-            <div class="mb-4">
-                <label for="scientific_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome
-                    Científico</label>
-                <input type="text" id="scientific_name" name="scientific_name"
-                    value="<?php echo isset($plant['scientific_name']) ? $plant['scientific_name'] : ''; ?>"
-                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400">
-            </div>
-            <div class="mb-4">
-                <label for="description"
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descrição</label>
-                <textarea id="description" name="description"
-                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400"><?php echo isset($plant['description']) ? $plant['description'] : ''; ?></textarea>
-            </div>
-            <div class="mb-4">
-                <label for="planting_instructions"
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Instruções de Plantio</label>
-                <textarea id="planting_instructions" name="planting_instructions"
-                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400"><?php echo isset($plant['planting_instructions']) ? $plant['planting_instructions'] : ''; ?></textarea>
-            </div>
-            <div class="mb-4">
-                <label for="care_instructions"
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cuidados</label>
-                <textarea id="care_instructions" name="care_instructions"
-                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400"><?php echo isset($plant['care_instructions']) ? $plant['care_instructions'] : ''; ?></textarea>
-            </div>
-            <div class="mb-4">
-                <label for="technical_sheet" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ficha
-                    Técnica</label>
-                <textarea id="technical_sheet" name="technical_sheet"
-                    class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400"><?php echo isset($plant['technical_sheet']) ? $plant['technical_sheet'] : ''; ?></textarea>
-            </div>
+            <?php
+            function createInput($id, $label, $type = 'text', $value = '') {
+                return "
+                <div class='mb-4'>
+                    <label for='$id' class='block text-sm font-medium text-gray-700 dark:text-gray-300'>$label</label>
+                    <input type='$type' id='$id' name='$id' value='$value'
+                        class='mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400'>
+                </div>";
+            }
+
+            function createTextarea($id, $label, $value = '') {
+                return "
+                <div class='mb-4'>
+                    <label for='$id' class='block text-sm font-medium text-gray-700 dark:text-gray-300'>$label</label>
+                    <textarea id='$id' name='$id'
+                        class='mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400'>$value</textarea>
+                </div>";
+            }
+
+            echo createInput('name', 'Nome', 'text', $plant['name'] ?? '');
+            echo createInput('scientific_name', 'Nome Científico', 'text', $plant['scientific_name'] ?? '');
+            echo createTextarea('description', 'Descrição', $plant['description'] ?? '');
+            echo createTextarea('planting_instructions', 'Instruções de Plantio', $plant['planting_instructions'] ?? '');
+            echo createTextarea('care_instructions', 'Cuidados', $plant['care_instructions'] ?? '');
+            echo createTextarea('technical_sheet', 'Ficha Técnica', $plant['technical_sheet'] ?? '');
+            ?>
             <div class="mb-4">
                 <label for="image_path"
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imagem</label>
@@ -149,11 +135,11 @@ if (isset($_GET['id'])) {
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">Toxicidade</label>
                 <select id="toxicity" name="toxicity"
                     class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400">
-                    <option value="0"
-                        <?php echo (isset($plant['toxicity']) && $plant['toxicity'] == 0) ? 'selected' : ''; ?>>Sem
+                    <option value="0" <?= (isset($plant['toxicity']) && $plant['toxicity'] == 0) ? 'selected' : ''; ?>>
+                        Sem
                         toxicidade</option>
-                    <option value="1"
-                        <?php echo (isset($plant['toxicity']) && $plant['toxicity'] == 1) ? 'selected' : ''; ?>>Toxica
+                    <option value="1" <?= (isset($plant['toxicity']) && $plant['toxicity'] == 1) ? 'selected' : ''; ?>>
+                        Tóxica
                     </option>
                 </select>
             </div>
@@ -163,16 +149,16 @@ if (isset($_GET['id'])) {
                 <select id="sun_requirements" name="sun_requirements"
                     class="mt-1 p-2 w-full border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:placeholder-gray-400">
                     <option value="Full sun"
-                        <?php echo (isset($plant['sun_requirements']) && $plant['sun_requirements'] == 'Full sun') ? 'selected' : ''; ?>>
+                        <?= (isset($plant['sun_requirements']) && $plant['sun_requirements'] == 'Full sun') ? 'selected' : ''; ?>>
                         Sol-pleno</option>
                     <option value="Part sun"
-                        <?php echo (isset($plant['sun_requirements']) && $plant['sun_requirements'] == 'Part sun') ? 'selected' : ''; ?>>
+                        <?= (isset($plant['sun_requirements']) && $plant['sun_requirements'] == 'Part sun') ? 'selected' : ''; ?>>
                         Sol-parcial</option>
                     <option value="Part shade"
-                        <?php echo (isset($plant['sun_requirements']) && $plant['sun_requirements'] == 'Part shade') ? 'selected' : ''; ?>>
+                        <?= (isset($plant['sun_requirements']) && $plant['sun_requirements'] == 'Part shade') ? 'selected' : ''; ?>>
                         Sombra-parcial</option>
                     <option value="Full shade"
-                        <?php echo (isset($plant['sun_requirements']) && $plant['sun_requirements'] == 'Full shade') ? 'selected' : ''; ?>>
+                        <?= (isset($plant['sun_requirements']) && $plant['sun_requirements'] == 'Full shade') ? 'selected' : ''; ?>>
                         Sombra</option>
                 </select>
             </div>
@@ -181,24 +167,14 @@ if (isset($_GET['id'])) {
                 <?php
                 // Define as categorias e seus IDs
                 $categories = [
-                    23 => 'Flores',
-                    11 => 'Anuais',
-                    15 => 'Folhagens',
-                    21 => 'Forrações',
-                    18 => 'Palmeiras',
-                    12 => 'Perenes',
-                    16 => 'Arbustos',
-                    19 => 'Frutíferas',
-                    20 => 'Trepadeiras',
-                    13 => 'Ervas',
-                    14 => 'Suculentas',
-                    22 => 'Aquaticas',
-                    17 => 'Arvores'
+                    23 => 'Flores', 11 => 'Anuais', 15 => 'Folhagens', 21 => 'Forrações', 18 => 'Palmeiras',
+                    12 => 'Perenes', 16 => 'Arbustos', 19 => 'Frutíferas', 20 => 'Trepadeiras', 13 => 'Ervas',
+                    14 => 'Suculentas', 22 => 'Aquaticas', 17 => 'Arvores'
                 ];
 
                 // Busca as categorias atuais da planta
                 $plant_categories = [];
-                if (isset($plant['id'])) {
+                if ($plant) {
                     $stmt = $conn->prepare("SELECT category_id FROM plant_categories WHERE plant_id = ?");
                     $stmt->bind_param("i", $plant['id']);
                     $stmt->execute();
