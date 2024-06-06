@@ -86,7 +86,7 @@ if (isset($_GET['id'])) {
         } else {
             echo '<div class="p-4 flex flex-col items-center">';
             echo '<img src="../../images/planta-nao-encontrada.webp" class="w-1/2 md:w-1/3">';
-            echo '<p class="text-gray-700 dark:text-gray-300 text-xl text-semibold border-2 border-amber-500 p-4 rounded-md">Ops! Parece que essa planta decidiu não aparecer no nosso jardim. Talvez esteja de férias ou se escondendo atrás de um arbusto. Tente procurar outra planta ou volte mais tarde para ver se ela já voltou!</p>';
+            echo '<p class="text-gray-700 dark:text-gray-300 text-xl text-semibold border-2 border-amber-500 p-4 rounded-md">Ops! Não encontramos essa planta. Talvez esteja de férias ou se escondendo atrás de um arbusto. Tente procurar outra planta ou volte mais tarde para ver se ela já voltou!</p>';
             echo '</div>';
         }
 
