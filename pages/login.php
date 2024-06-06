@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Iniciar a sessão do usuário
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['is_admin'] = $user['is_admin'];
-            header("Location: /login");
+            header("Location: /");
             exit();
         } else {
             $error = "Senha incorreta";
