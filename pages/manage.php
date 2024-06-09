@@ -169,7 +169,7 @@ if (isset($_GET['id'])) {
                 $categories = [
                     23 => 'Flores', 11 => 'Anuais', 15 => 'Folhagens', 21 => 'Forrações', 18 => 'Palmeiras',
                     12 => 'Perenes', 16 => 'Arbustos', 19 => 'Frutíferas', 20 => 'Trepadeiras', 13 => 'Ervas',
-                    14 => 'Suculentas', 22 => 'Aquaticas', 17 => 'Arvores'
+                    14 => 'Suculentas', 24 => 'Cactos', 22 => 'Aquaticas', 17 => 'Arvores'
                 ];
 
                 // Busca as categorias atuais da planta

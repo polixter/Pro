@@ -49,7 +49,7 @@ session_start();
                     aria-labelledby="dropdownCheckboxButton">
                     <?php
                     $categories = [
-                        "Anuais", "Perenes", "Ervas", "Suculentas", "Folhagens", "Arbustos", "Árvores", 
+                        "Anuais", "Perenes", "Ervas", "Suculentas", "Cactos", "Folhagens", "Arbustos", "Árvores", 
                         "Palmeiras", "Frutíferas", "Trepadeiras", "Forrações", "Aquáticas", "Flores"
                     ];
                     foreach ($categories as $category) {
