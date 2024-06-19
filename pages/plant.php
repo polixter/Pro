@@ -69,12 +69,12 @@ if (isset($_GET['id'])) {
             echo '<h2 class="text-xl font-bold mt-4 text-lime-800 dark:text-lime-500 mt-3">Sobre</h2>';
             echo '<p class="mt-2 text-gray-900 dark:text-gray-300 font-semibold">'.nl2br(htmlspecialchars($plant["description"])).'</p>';
             echo '<div class="border-t border-gray-300 dark:border-gray-700 mt-4"></div>';
-            echo '<h2 class="text-xl font-bold mt-3 text-lime-800 dark:text-lime-500">Plantio</h2>';
-            echo '<p class="mt-1 text-gray-900 dark:text-gray-300 font-semibold">'.nl2br(htmlspecialchars($plant["planting_instructions"])).'</p>';
-            echo '<div class="border-t border-gray-300 dark:border-gray-700 mt-4"></div>';
             echo '<h2 class="text-xl font-bold mt-3 text-lime-800 dark:text-lime-500">Cuidados</h2>';
             echo '<p class="mt-1 text-gray-900 dark:text-gray-300 font-semibold">'.nl2br(htmlspecialchars($plant["care_instructions"])).'</p>';
             echo '<div class="border-t border-gray-400 dark:border-gray-700 mt-4"></div>';
+            echo '<h2 class="text-xl font-bold mt-3 text-lime-800 dark:text-lime-500">Plantio</h2>';
+            echo '<p class="mt-1 text-gray-900 dark:text-gray-300 font-semibold">'.nl2br(htmlspecialchars($plant["planting_instructions"])).'</p>';
+            echo '<div class="border-t border-gray-300 dark:border-gray-700 mt-4"></div>';
             echo '<h2 class="text-xl font-bold mt-3 text-lime-800 dark:text-lime-500">Ficha Técnica</h2>';
             echo '<p class="mt-1 text-gray-9 00 dark:text-gray-300 font-semibold leading-relaxed">'.nl2br(htmlspecialchars($plant["technical_sheet"])).'</p>';
             echo '<ul class="mt-1 text-gray-900 dark:text-gray-300 font-semibold">';
